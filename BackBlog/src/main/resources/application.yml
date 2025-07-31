@@ -1,0 +1,30 @@
+# 端口配置
+server:
+  port: 8888
+
+#mysql连接配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123456
+  # 上传文件大小配置
+  # 上传文件总的最大值
+  servlet:
+    multipart:
+      max-request-size: 20MB
+      max-file-size: 1MB
+# mybatis plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      table-prefix: ms_
+  mapper-locations: classpath*:org/hrc/backblog/dao/mapper/*.xml
+# 七牛云密钥
+qiniu:
+  accessKey: //我自己的我给删了，你加上你的就行
+  accessSecretKey: //我自己的我给删了，你加上你的就行
+
