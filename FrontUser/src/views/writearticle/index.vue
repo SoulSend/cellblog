@@ -304,7 +304,7 @@ const submitArticle = () => {
     .then(response => { 
       alert('文章发布成功'); 
       showModal.value = false; 
-      router.push('/home/index');
+      router.push('/home');
     })
     .catch(error => { 
       console.error('文章发布失败', error); 
@@ -313,7 +313,7 @@ const submitArticle = () => {
 };
 
 const goHome = () => {
-  router.push('/home/index');
+          router.push('/home');
 };
 </script>
 

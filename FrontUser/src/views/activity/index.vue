@@ -156,7 +156,7 @@ export default defineComponent({
     };
 
     const goToDetail = (id: number) => {
-      router.push({ path: `/home/ActivityDetail/${id}` });
+      router.push({ name: 'ActivityDetail', params: { id } });
     };
 
     const joinActivity = (id: number) => {

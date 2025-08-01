@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/home/index'
+      redirect: '/home'
     },
 
     {
@@ -18,32 +18,16 @@ const router = createRouter({
       },
       children: [
         {
-          path: 'index',
+          path: '',
           name: 'index',
           component: () => import('../views/index/index.vue'),
           meta: {
             title: '首页',
             keepAlive: true
-          },
-          children: [
-            {
-              path: '',
-              redirect: '/home/index/前端'
-            },
-            {
-              path: ':category',
-              name: 'category',
-              component: () => import('../views/index/frontend/index.vue'),
-              props: true,
-              meta: {
-                title: '分类文章',
-                keepAlive: true
-              }
-            }
-          ]
+          }
         },
         {
-          path: 'ArticleDetail/:id', 
+          path: 'article/:id',
           name: 'ArticleDetail',
           component: () => import('../views/ArticleDetail/index.vue'),
           props: true,
@@ -80,7 +64,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'ActivityDetail/:id',
+          path: 'activity/:id',
           name: 'ActivityDetail',
           component: () => import('../views/ActivityDetail/index.vue'),
           props: true,
@@ -92,7 +76,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/WriteArticle',
+      path: '/write',
       name: 'WriteArticle',
       component: () => import('@/views/writearticle/index.vue'),
       meta: {
@@ -102,7 +86,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/Profile',
+      path: '/profile',
       name: 'Profile',
       component: () => import('@/views/Profile/index.vue'),
       meta: {

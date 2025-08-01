@@ -444,11 +444,11 @@ const changeAvatar = () => {
 };
 
 const createArticle = () => {
-  router.push('/WriteArticle');
+  router.push('/write');
 };
 
 const goHome = () => {
-  router.push('/home/index');
+  router.push('/home');
 };
 
 const formatDate = (dateString: string) => {

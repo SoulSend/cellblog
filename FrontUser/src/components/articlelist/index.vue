@@ -121,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
 
@@ -144,7 +144,10 @@ interface Article {
 }
 
 const props = defineProps({
-  categoryId: Number,
+  categoryId: {
+    type: Number,
+    required: true
+  },
   page: {
     type: Number,
     default: 1
@@ -163,7 +166,7 @@ const goToDetail = (id: number) => {
 };
 
 const goToWriteArticle = () => {
-  router.push('/WriteArticle');
+  router.push('/write');
 };
 
 const fetchArticles = async () => {
@@ -180,34 +183,33 @@ const fetchArticles = async () => {
   }
 };
 
-onMounted(fetchArticles);
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 1) {
+    return '今天';
+  } else if (diffDays === 2) {
+    return '昨天';
+  } else if (diffDays <= 7) {
+    return `${diffDays - 1}天前`;
+  } else {
+    return date.toLocaleDateString('zh-CN');
+  }
+};
 
-import { watch } from 'vue';
-watch(() => props.categoryId, (newCategoryId) => {
+onMounted(() => {
   fetchArticles();
 });
 
-const formatDate = (date: string) => {
-  const timestamp = Date.parse(date);
-  if (!isNaN(timestamp)) {
-    const dateObj = new Date(timestamp);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - dateObj.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) {
-      return '今天';
-    } else if (diffDays === 2) {
-      return '昨天';
-    } else if (diffDays <= 7) {
-      return `${diffDays}天前`;
-    } else {
-      return dateObj.toLocaleDateString();
-    }
-  } else {
-    return '未知时间';
+// 监听categoryId变化，重新获取文章
+watch(() => props.categoryId, (newCategoryId) => {
+  if (newCategoryId) {
+    fetchArticles();
   }
-};
+});
 </script>
 
 <style scoped>

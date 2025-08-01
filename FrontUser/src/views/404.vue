@@ -48,7 +48,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const goHome = () => {
-  router.push('/home/index');
+  router.push('/home');
 };
 
 const goBack = () => {

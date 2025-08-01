@@ -137,15 +137,15 @@ const showLoginWarning = ref(false);
 const showLoginModal = ref(false);
 
 const navLinks = [
-  { to: "/home/index/前端", text: "首页", icon: "home" },
+  { to: "/home", text: "首页", icon: "home" },
   { to: "/home/activity", text: "活动", icon: "activity" },
   { to: "/home/search", text: "发现", icon: "search" },
 ];
 
 // 检查当前路由是否激活
 const isActiveRoute = (path: string) => {
-  if (path === "/home/index/前端") {
-    return route.path.startsWith('/home/index');
+  if (path === "/home") {
+    return route.path === '/home';
   }
   return route.path === path;
 };
@@ -166,7 +166,7 @@ const goToWriteArticle = () => {
       showLoginWarning.value = false;
     }, 3000);
   } else {
-    router.push("/WriteArticle");
+    router.push("/write");
   }
 };
 

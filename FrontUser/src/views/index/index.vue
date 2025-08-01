@@ -15,7 +15,7 @@
         <ul class="category-list">
           <li v-for="category in categories" :key="category.id" class="category-item">
             <button 
-              @click="navigateToCategory(category)" 
+              @click="switchCategory(category)" 
               class="category-btn" 
               :class="{ 'active': isCurrentCategory(category) }"
             >
@@ -43,7 +43,10 @@
         </div>
         <div class="content-stats">
           <span class="stat-item">
-            <span class="stat-icon">📊</span>
+            <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"></path>
+              <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+            </svg>
             <span class="stat-text">分类统计</span>
           </span>
         </div>
@@ -51,10 +54,7 @@
       
       <div class="content-body">
         <div v-if="currentCategory" class="content-wrapper">
-          <router-view 
-            :key="currentCategory.categoryName"
-            :category="currentCategory.categoryName"
-          ></router-view>
+          <List :categoryId="currentCategory.id" :key="currentCategory.id"></List>
         </div>
         <div v-else class="loading-container">
           <div class="loading-spinner"></div>
@@ -153,7 +153,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import axios from '@/axios';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import List from '@/components/articlelist/index.vue';
 
 interface Category {
   id: number;
@@ -183,27 +184,22 @@ interface Article {
 const categories = ref<Category[]>([]);
 const hotTags = ref<Tag[]>([]);
 const hotArticles = ref<Article[]>([]);
+const currentCategoryId = ref<number>(1); // 默认选择前端分类
 const router = useRouter();
-const route = useRoute();
 
 // 计算当前分类
 const currentCategory = computed(() => {
-  const categoryParam = route.params.category as string;
-  
-  const foundCategory = categories.value.find(cat => 
-    cat.categoryName.toLowerCase() === categoryParam?.toLowerCase()
-  );
-  
-  if (!foundCategory && categories.value.length > 0) {
-    return categories.value[0];
-  }
-  
-  return foundCategory || null;
+  return categories.value.find(cat => cat.id === currentCategoryId.value) || categories.value[0];
 });
 
 // 检查是否为当前分类
 const isCurrentCategory = (category: Category) => {
-  return currentCategory.value?.id === category.id;
+  return category.id === currentCategoryId.value;
+};
+
+// 切换分类
+const switchCategory = (category: Category) => {
+  currentCategoryId.value = category.id;
 };
 
 onMounted(async () => {
@@ -211,9 +207,9 @@ onMounted(async () => {
     const categoryResponse = await axios.get('http://localhost:8888/categorys/detail');
     categories.value = categoryResponse.data.data;
     
-    if (!route.params.category && categories.value.length > 0) {
-      const firstCategory = categories.value[0];
-      router.push(`/home/index/${firstCategory.categoryName}`);
+    // 默认选择第一个分类
+    if (categories.value.length > 0) {
+      currentCategoryId.value = categories.value[0].id;
     }
   } catch (error) {
     console.error('Failed to fetch categories:', error);
@@ -227,17 +223,12 @@ onMounted(async () => {
   }
 });
 
-function navigateToCategory(category: Category) {
-  // 使用replace而不是push，避免在历史记录中堆积相同路由
-  router.replace(`/home/index/${category.categoryName}`);
-}
-
 const goToDetail = (id: string) => {
   router.push({ name: 'ArticleDetail', params: { id: id } });
 };
 
 const goToWriteArticle = () => {
-  router.push('/WriteArticle');
+  router.push('/write');
 };
 
 const goToSearch = () => {
