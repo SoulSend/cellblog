@@ -1,5 +1,6 @@
 package org.hrc.backblog.controller;
 
+import org.hrc.backblog.common.aop.LogAnnotation;
 import org.hrc.backblog.service.ArticleService;
 import org.hrc.backblog.vo.Result;
 import org.hrc.backblog.vo.params.ArticleParam;
@@ -39,7 +40,7 @@ public class ArticleController {
      * 获取首页最新文章
      * @return 返回一个Result
      */
-    @PostMapping("/new")
+    @GetMapping("/new")
     public Result newArticle(){
         int limit =5;
         return articleService.newArticle(limit);
@@ -68,6 +69,7 @@ public class ArticleController {
      * use
      * 写文章
      */
+    @LogAnnotation(module = "文章模块",operation = "写文章")
     @PostMapping("/publish")
     public Result articlePublish(@RequestBody ArticleParam articleParam){
         return articleService.articlePublish(articleParam);

@@ -117,8 +117,8 @@ public class ArticleServiceImpl implements ArticleService {
     public Result hotArticle(int limit) {
         //根据浏览量排序，
         queryWrapper.orderByDesc(Article::getViewCounts);
-        //只获取文章id和title
-        queryWrapper.select(Article::getId,Article::getTitle);
+        //获取文章id和title 还有浏览量和评论数
+        queryWrapper.select(Article::getId,Article::getTitle,Article::getCommentCounts,Article::getViewCounts);
         //在sql语句结尾拼接limit限制
         queryWrapper.last("limit "+limit);
         //select id,title from ms_article oder by view_counts desc limit 5
@@ -158,7 +158,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result newArticle(int limit) {
         queryWrapper.orderByDesc(Article::getCreateDate);
-        queryWrapper.select(Article::getId,Article::getTitle);
+        queryWrapper.select(Article::getId,Article::getTitle,Article::getCommentCounts,Article::getViewCounts);
         queryWrapper.last("limit "+limit);
         List<Article> articles = articleMapper.selectList(queryWrapper);
         return Result.success(copyList(articles,true,true,false));

@@ -24,7 +24,7 @@ public class LoginController {
      * @return 返回一个包含token的Result
      */
     @PostMapping
-    @LogAnnotation(module = "登录模块",operation = "登录接口")
+    @LogAnnotation(module = "登录模块",operation = "用户登录")
     public Result login(@RequestBody LoginParam loginParam){
        return  loginService.login(loginParam);
     }
@@ -32,6 +32,7 @@ public class LoginController {
      * 管理员登录
      */
     @PostMapping("admin")
+    @LogAnnotation(module = "登录模块",operation = "管理员登录")
     public Result adminLogin(@RequestBody AdminLoginParam adminLoginParam){
         return  loginService.adminLogin(adminLoginParam);
     }

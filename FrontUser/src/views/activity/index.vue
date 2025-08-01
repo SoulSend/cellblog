@@ -70,8 +70,10 @@
         </div>
         
         <div class="card-content">
-          <h3 class="activity-title">{{ activity.title }}</h3>
-          <p class="activity-description">{{ activity.description }}</p>
+          <div class="content-header">
+            <h3 class="activity-title">{{ activity.title }}</h3>
+            <p class="activity-description">{{ activity.description }}</p>
+          </div>
           
           <div class="activity-meta">
             <div class="meta-item">
@@ -160,8 +162,8 @@ export default defineComponent({
     };
 
     const joinActivity = (id: number) => {
-      // 实现报名逻辑
-      console.log('Joining activity:', id);
+      // 跳转到活动详情页
+      router.push({ name: 'ActivityDetail', params: { id: id.toString() } });
     };
 
     const formatDate = (isoDateString: string) => {
@@ -364,6 +366,9 @@ export default defineComponent({
   transition: all var(--transition-normal);
   cursor: pointer;
   border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .activity-card:hover {
@@ -410,6 +415,14 @@ export default defineComponent({
 
 .card-content {
   padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.content-header {
+  flex: 1;
+  margin-bottom: var(--space-4);
 }
 
 .activity-title {
@@ -418,13 +431,17 @@ export default defineComponent({
   color: var(--text-primary);
   margin: 0 0 var(--space-3) 0;
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .activity-description {
   font-size: 0.875rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin: 0 0 var(--space-4) 0;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -436,7 +453,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
+  margin-top: auto;
 }
 
 .meta-item {

@@ -320,12 +320,20 @@ onBeforeUnmount(() => {
 }
 
 .nav-link:hover::before {
-  opacity: 1;
+  opacity: 0.3;
 }
 
 .nav-link:hover {
   color: var(--primary-color);
   transform: translateY(-1px);
+}
+
+.nav-link:hover .nav-icon {
+  color: var(--primary-color);
+}
+
+.nav-link:hover .nav-text {
+  color: var(--primary-color);
 }
 
 .nav-link.active {

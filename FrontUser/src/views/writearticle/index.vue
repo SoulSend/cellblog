@@ -441,12 +441,16 @@ const goHome = () => {
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 150px);
 }
 
 .title-section {
   padding: var(--space-6) var(--space-6) 0;
   border-bottom: 1px solid var(--border-light);
   position: relative;
+  flex-shrink: 0;
 }
 
 .title-wrapper {
@@ -485,6 +489,10 @@ const goHome = () => {
 
 .editor-container {
   padding: var(--space-6);
+  height: calc(100vh - 200px);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 右侧设置面板 */
