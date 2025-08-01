@@ -16,6 +16,7 @@ import org.hrc.backblog.dao.pojo.SysUser;
 import org.hrc.backblog.service.*;
 
 import org.hrc.backblog.utils.UserThreadLocal;
+import org.hrc.backblog.utils.cache.HotArticleCacheManager;
 import org.hrc.backblog.vo.*;
 import org.hrc.backblog.vo.params.ArticleParam;
 import org.hrc.backblog.vo.params.PageParams;
@@ -49,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private CommentsService commentsService;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private HotArticleCacheManager  hotArticleCacheManager;
     //文章类型服务接口，忘记打Service 有空再改
     @Autowired
     private ArticleCategory articleCategory;
@@ -123,31 +124,6 @@ public class ArticleServiceImpl implements ArticleService {
         queryWrapper.last("limit "+limit);
         //select id,title from ms_article oder by view_counts desc limit 5
         List<Article> articles = articleMapper.selectList(queryWrapper);
-        // 3. 批量缓存到Redis（一次性操作）
-        if (!articles.isEmpty()) {
-            // 3.1 创建键值对映射
-            Map<String, String> articleMap = new HashMap<>(articles.size());
-
-            // 3.2 使用Jackson序列化
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            for (Article article : articles) {
-                try {
-                    String json = objectMapper.writeValueAsString(article);
-                    articleMap.put("hotArticle:" + article.getId(), json);
-                } catch (JsonProcessingException e) {
-                    log.error("文章序列化失败: {}", article.getId(), e);
-                }
-            }
-            // 3.3 一次性设置多个键值对
-            stringRedisTemplate.opsForValue().multiSet(articleMap);
-
-            // 3.4 设置过期时间（可选）
-            Duration expireTime = Duration.ofHours(24);
-            for (String key : articleMap.keySet()) {
-                stringRedisTemplate.expire(key, expireTime);
-            }
-        }
         return Result.success(copyList(articles,false,false,false));
     }
     /**
@@ -181,7 +157,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    public Result findArticleById(Long id) {
+    public Result findArticleById(Long id)  {
         /**
          * 先获取文章article
          * 然后通过bodyId字段获取body
@@ -189,12 +165,27 @@ public class ArticleServiceImpl implements ArticleService {
          * 转换成对应的vo类，封装到响应的articleVo类里面
          * 返回封装为Result类的articleVo
          */
-        // todo 先查缓存
-
-        //缓存不存在 查数据库
+        //  先查缓存
+        Article cacheArticle = null;
+        try {
+            cacheArticle = hotArticleCacheManager.fetchHotArticle(id);
+        } catch (Exception e) {
+            return Result.fail(ErrorCode.SYSTEM_ERROR.getCode(), ErrorCode.SYSTEM_ERROR.getMsg());
+        }
+        if (cacheArticle!=null){
+            return Result.success(copy(cacheArticle,true,true,true,true));
+        }
+        //缓存未命中 查数据库
         Article article = articleMapper.selectById(id);
         if(article==null){
             return Result.fail(ErrorCode.ARTICLE_ABSENT.getCode(), ErrorCode.ARTICLE_ABSENT.getMsg());
+        }
+        //执行缓存操作
+        try {
+            article.setViewCounts(article.getViewCounts()+1);
+            hotArticleCacheManager.cacheHotArticle(article);
+        } catch (Exception e) {
+            return Result.fail(ErrorCode.SYSTEM_ERROR.getCode(), ErrorCode.SYSTEM_ERROR.getMsg());
         }
         /**
          * 查看文章后，这个文章的viewCount要+1,但是直接在这里对数据库写操作，会增加耗时

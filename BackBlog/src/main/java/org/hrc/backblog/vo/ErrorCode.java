@@ -4,6 +4,7 @@ package org.hrc.backblog.vo;
  * 统一错误码-枚举类
  */
 public enum ErrorCode {
+
     PARAMS_ERROR(10001,"参数有误"),
     ACCOUNT_PWD_NOT_EXIST(10002,"用户名或密码不存在"),
     TOKEN_ERROR(10003,"TOKEN不合法"),
@@ -12,6 +13,7 @@ public enum ErrorCode {
     ACTIVITY_ABSENT (10006,"没有活动"),
     //原密码错误
     WRONG_PASSWORD(10007,"原密码错误"),
+    SYSTEM_ERROR(10008,"系统错误"),
 
     NO_PERMISSION(70001,"无访问权限"),
     SESSION_TIME_OUT(90001,"会话超时"),

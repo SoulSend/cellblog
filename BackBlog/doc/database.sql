@@ -43,7 +43,7 @@ CREATE TABLE `ms_article` (
   `comment_counts` int NOT NULL DEFAULT '0' COMMENT '评论数量',
   `view_counts` int NOT NULL DEFAULT '0' COMMENT '浏览量',
   `author_id` bigint NOT NULL COMMENT '作者ID',
-  `body_id` bigint NOT NULL COMMENT '文章内容ID',
+  `body_id` bigint  NULL COMMENT '文章内容ID',
   `category_id` bigint NOT NULL COMMENT '分类ID',
   `weight` int NOT NULL DEFAULT '0' COMMENT '置顶权重',
   `create_date` bigint NOT NULL COMMENT '创建时间',
