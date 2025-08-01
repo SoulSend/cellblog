@@ -156,7 +156,7 @@
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 14V2h12l5.59 5.59a2 2 0 0 1 0 2.82z"></path>
               <line x1="7" y1="7" x2="7.01" y2="7"></line>
             </svg>
-            {{ typeof tag === 'string' ? tag : tag.tagName || tag.name || tag }}
+            {{ typeof tag === 'string' ? tag : (tag as any).tagName || (tag as any).name || tag }}
           </button>
         </div>
       </div>
@@ -244,6 +244,7 @@ const hasSearched = ref(false);
 const isSearchFocused = ref(false);
 const activeTab = ref('all');
 const router = useRouter();
+const searchInput = ref<HTMLInputElement | null>(null);
 
 // 搜索标签页
 const searchTabs = [
@@ -267,7 +268,7 @@ const searchSuggestions = computed(() => {
 });
 
 // 热门标签
-const trendingTags = ref([]);
+const trendingTags = ref<string[]>([]);
 
 // 获取热门标签
 const fetchHotTags = async () => {
@@ -286,7 +287,17 @@ const fetchHotTags = async () => {
 };
 
 // 最新文章
-const recommendedArticles = ref([]);
+interface Article {
+  id: number;
+  title: string;
+  summary: string;
+  author?: string;
+  createDate?: string;
+  viewCounts: number;
+  commentCounts: number;
+}
+
+const recommendedArticles = ref<Article[]>([]);
 
 // 获取最新文章
 const fetchLatestArticles = async () => {

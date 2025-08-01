@@ -78,7 +78,7 @@
           <h3 class="comments-title">评论 ({{ article.commentCounts }})</h3>
           <button class="close-comments-btn" @click="toggleComments">×</button>
         </div>
-        <Comments :article-id="article.id" />
+        <Comments :article-id="article.id" :article-author="article.author" />
       </div>
     </div>
     <div v-else>
@@ -119,7 +119,7 @@ interface Article {
 
 const route = useRoute();
 const article = ref<Article | null>(null);
-const showComments = ref(false);
+const showComments = ref(true);
 
 onMounted(async () => {
   try {

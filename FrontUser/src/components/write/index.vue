@@ -124,7 +124,7 @@ console.log('Hello World');
 </template>
 
 <script setup>
-import { onBeforeUnmount, ref, shallowRef, onMounted, computed, watch } from 'vue';
+import { onBeforeUnmount, ref, shallowRef, computed } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { marked } from 'marked';
 import hljs from 'highlight.js';

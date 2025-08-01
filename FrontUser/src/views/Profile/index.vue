@@ -85,7 +85,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">注册时间</span>
-              <span class="detail-value">{{ formatDate(user?.createDate) }}</span>
+              <span class="detail-value">{{ formatDate(user?.createDate || '') }}</span>
             </div>
           </div>
         </div>

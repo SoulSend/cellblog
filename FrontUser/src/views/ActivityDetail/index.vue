@@ -225,6 +225,7 @@ export default defineComponent({
       formatDate,
       joinActivity,
       goBack,
+      fetchActivity,
     };
   },
 });

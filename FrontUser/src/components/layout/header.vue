@@ -68,7 +68,7 @@
               <img :src="user.avatar" alt="用户头像" class="dropdown-avatar" />
               <div class="dropdown-user-info">
                 <div class="dropdown-name">{{ user.nickname }}</div>
-                <div class="dropdown-email">{{ user.email || '用户' }}</div>
+                <div class="dropdown-email">{{ user.account || '用户' }}</div>
               </div>
             </div>
             <div class="dropdown-divider"></div>
@@ -101,23 +101,7 @@
       @login-success="handleLoginSuccess"
     />
 
-    <!-- 登录提示 -->
-    <div v-if="showLoginWarning" class="login-warning" @click="hideLoginWarning">
-      <div class="warning-content">
-        <svg class="warning-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          <line x1="12" y1="9" x2="12" y2="13"></line>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-        <div class="warning-text">请先登录后再写文章</div>
-        <button class="warning-close" @click.stop="hideLoginWarning">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
+
   </header>
 </template>
 
@@ -126,6 +110,7 @@ import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/index";
 import LoginModal from '@/components/login-modal/index.vue';
+import { toast } from '@/utils/toast';
 
 const router = useRouter();
 const route = useRoute();
@@ -133,7 +118,6 @@ const store = useAuthStore();
 const isAuthenticated = computed(() => store.userIsAuthenticated);
 const user = computed(() => store.getUser);
 const showDropdown = ref(false);
-const showLoginWarning = ref(false);
 const showLoginModal = ref(false);
 
 const navLinks = [
@@ -161,17 +145,10 @@ const logout = async () => {
 
 const goToWriteArticle = () => {
   if (!isAuthenticated.value) {
-    showLoginWarning.value = true;
-    setTimeout(() => {
-      showLoginWarning.value = false;
-    }, 3000);
+    toast.warning("请先登录后再写文章");
   } else {
     router.push("/write");
   }
-};
-
-const hideLoginWarning = () => {
-  showLoginWarning.value = false;
 };
 
 const handleLoginSuccess = () => {
@@ -578,79 +555,7 @@ onBeforeUnmount(() => {
   }
 }
 
-/* 登录警告 */
-.login-warning {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  animation: warningSlideIn 0.3s ease-out;
-}
 
-.warning-content {
-  background: var(--warning-color);
-  color: white;
-  padding: var(--space-6);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  min-width: 320px;
-  position: relative;
-}
-
-.warning-icon {
-  flex-shrink: 0;
-  animation: pulse 2s infinite;
-}
-
-.warning-text {
-  font-size: 1rem;
-  font-weight: 500;
-  flex-grow: 1;
-}
-
-.warning-close {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: var(--space-1);
-  border-radius: 50%;
-  transition: background-color var(--transition-fast);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.warning-close:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-@keyframes warningSlideIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
 
 /* 响应式设计 */
 @media (max-width: 768px) {

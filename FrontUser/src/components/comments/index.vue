@@ -51,7 +51,7 @@
           <div class="comment-main">
             <div class="comment-author-info">
               <span class="comment-author">{{ comment.author.nickname }}</span>
-              <span class="comment-badge">作者</span>
+              <span v-if="comment.author.nickname === props.articleAuthor" class="comment-badge">作者</span>
               <time class="comment-date">{{ formatDate(comment.createDate) }}</time>
             </div>
             <div class="comment-actions">
@@ -125,6 +125,7 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted } from 'vue';
 import axios from '@/axios';
+import { toast } from '@/utils/toast';
 
 interface Author {
   nickname: string;
@@ -146,6 +147,7 @@ interface Comment {
 
 interface CommentsProps {
   articleId: string;
+  articleAuthor?: string;
 }
 
 const props = defineProps<CommentsProps>();
@@ -196,9 +198,9 @@ const submitComment = async (parentId: string | null, toUserId: number | null, c
     } else {
       // 如果后端返回未登录信息，提示用户
       if (response.data.code === 90002) {
-        alert("未登录不能写评论哦~~~"); // 显示未登录提示
+        toast.warning("请先登录后再发表评论");
       } else {
-        console.error('Failed to submit comment:', response.data.message);
+        toast.error(response.data.message || '评论发布失败');
       }
     }
   } catch (error) {
@@ -218,13 +220,13 @@ const reportComment = async (commentId: string) => {
   try {
     const response = await axios.put(`http://localhost:8888/comments/report/${commentId}`);
     if (response.data.code === 200) {
-      alert('举报成功！');
+      toast.success('举报成功！我们会尽快处理');
     } else {
-      alert('举报失败，请稍后再试。');
+      toast.error('举报失败，请稍后再试');
     }
   } catch (error) {
     console.error('Failed to report comment:', error);
-    alert('举报失败，请稍后再试。');
+    toast.error('举报失败，请稍后再试');
   }
 };
 </script>

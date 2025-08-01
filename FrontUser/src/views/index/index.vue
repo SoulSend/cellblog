@@ -54,7 +54,7 @@
       
       <div class="content-body">
         <div v-if="currentCategory" class="content-wrapper">
-          <List :categoryId="currentCategory.id" :key="currentCategory.id"></List>
+          <List :categoryId="Number(currentCategory.id)" :key="currentCategory.id"></List>
         </div>
         <div v-else class="loading-container">
           <div class="loading-spinner"></div>
@@ -205,7 +205,10 @@ const switchCategory = (category: Category) => {
 onMounted(async () => {
   try {
     const categoryResponse = await axios.get('http://localhost:8888/categorys/detail');
-    categories.value = categoryResponse.data.data;
+    categories.value = categoryResponse.data.data.map((cat: any) => ({
+      ...cat,
+      id: Number(cat.id)
+    }));
     
     // 默认选择第一个分类
     if (categories.value.length > 0) {
