@@ -7,7 +7,9 @@
         <el-main class="main-container">
             <RouterView v-slot="{ Component }">
               <transition name="fade" mode="out-in">
-                <component :is="Component" />
+                <div :key="$route.path" class="page-wrapper">
+                  <component :is="Component" />
+                </div>
               </transition>
             </RouterView>
         </el-main>
@@ -44,5 +46,10 @@ import Header from './header.vue';
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.page-wrapper {
+  width: 100%;
+  height: 100%;
 }
 </style>

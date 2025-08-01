@@ -74,7 +74,7 @@ const toggleDropdown = () => {
 const logout = async () => {
   console.log("触发")
   await store.logout();
-  router.push("/login");
+  // 注销后留在当前页面，不跳转到登录页面
   showDropdown.value = false;
 };
 

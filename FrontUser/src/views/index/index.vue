@@ -14,7 +14,9 @@
     </aside>
 
     <main class="content">
-      <router-view v-if="currentCategory" :category="currentCategory.categoryName"></router-view>
+      <div v-if="currentCategory" class="content-wrapper">
+        <router-view :category="currentCategory.categoryName"></router-view>
+      </div>
       <div v-else class="loading">加载中...</div>
     </main>
 
@@ -187,10 +189,11 @@ const goToDetail = (id: string) => {
 }
 
 .nav-item.is-active {
-  background-color: #06bac7;
-  color: #ffffff;
+  background-color: #f0f0f0;
+  color: #000000;
+  border: 2px solid #06bac7;
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(6, 186, 199, 0.3);
+  box-shadow: 0 8px 16px rgba(6, 186, 199, 0.2);
   transition: all 0.3s ease;
 }
 
@@ -206,6 +209,10 @@ const goToDetail = (id: string) => {
   padding: 0;
   margin-left: 20px;
   margin-right: 20px;
+}
+
+.content-wrapper {
+  width: 100%;
 }
 
 .sidebar-widget {

@@ -8,11 +8,7 @@ const router = createRouter({
       path: '/',
       redirect: '/home/index'
     },
-    {
-      path: '/login',//登录页
-      name: 'login',
-      component: () => import('../views/login/index.vue'),
-    },
+
     {
       path: '/home',//布局页
       name: 'home',
