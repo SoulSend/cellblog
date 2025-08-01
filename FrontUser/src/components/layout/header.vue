@@ -16,7 +16,7 @@
       <a href="#" class="btn" @click.prevent="goToWriteArticle">写文章</a>
     </div>
     <div class="login-register-box">
-      <RouterLink v-if="!isAuthenticated" to="/login" class="btn">登录/注册</RouterLink>
+      <button v-if="!isAuthenticated" @click="showLoginModal = true" class="btn">登录/注册</button>
       <div v-else class="user-profile" @click.stop="toggleDropdown">
         <img :src="user.avatar" alt="user avatar" class="avatar">
         <span>{{ user.nickname }}</span>
@@ -26,6 +26,22 @@
         </ul>
       </div>
     </div>
+
+    <!-- 登录模态框 -->
+    <LoginModal 
+      :visible="showLoginModal" 
+      @close="showLoginModal = false"
+      @login-success="handleLoginSuccess"
+    />
+
+    <!-- 登录提示警告 -->
+    <div v-if="showLoginWarning" class="login-warning" @click="hideLoginWarning">
+      <div class="warning-content">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text">未登录不能写文章哦~~~</div>
+        <button class="warning-close" @click.stop="hideLoginWarning">×</button>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -33,6 +49,7 @@
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
 import { RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/index";
+import LoginModal from '@/components/login-modal/index.vue';
 
 
 const router = useRouter();
@@ -40,6 +57,8 @@ const store = useAuthStore();
 const isAuthenticated = computed(() => store.userIsAuthenticated);
 const user = computed(() => store.getUser);
 const showDropdown = ref(false);
+const showLoginWarning = ref(false);
+const showLoginModal = ref(false);
 
 const navLinks = [
   { to: "/home/index/前端", text: "首页" },
@@ -60,12 +79,24 @@ const logout = async () => {
 };
 
 const goToWriteArticle = () => {
-
   if (!isAuthenticated.value) {
-    alert('未登录不能写文章哦~~~'); // 如果用户未登录，显示提示信息
+    showLoginWarning.value = true;
+    // 3秒后自动隐藏
+    setTimeout(() => {
+      showLoginWarning.value = false;
+    }, 3000);
   } else {
-    router.push("/WriteArticle"); // 如果用户已登录，导航到写文章页面
+    router.push("/WriteArticle");
   }
+};
+
+const hideLoginWarning = () => {
+  showLoginWarning.value = false;
+};
+
+const handleLoginSuccess = () => {
+  showLoginModal.value = false;
+  // 登录成功后可以添加其他逻辑
 };
 
 const goToProfile = () => {
@@ -240,6 +271,80 @@ onBeforeUnmount(() => {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+/* 登录警告样式 */
+.login-warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  animation: warningSlideIn 0.3s ease-out;
+}
+
+.warning-content {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 300px;
+  position: relative;
+}
+
+.warning-icon {
+  font-size: 24px;
+  animation: pulse 2s infinite;
+}
+
+.warning-text {
+  font-size: 16px;
+  font-weight: 500;
+  flex-grow: 1;
+}
+
+.warning-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.warning-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes warningSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 /* 响应式设计 */

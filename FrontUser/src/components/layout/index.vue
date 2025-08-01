@@ -1,11 +1,15 @@
 <template>
     <div class="common-layout">
       <el-container>
-        <el-header>
+        <el-header class="header-container">
             <Header/>
         </el-header>
-        <el-main>
-            <RouterView></RouterView>
+        <el-main class="main-container">
+            <RouterView v-slot="{ Component }">
+              <transition name="fade" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </RouterView>
         </el-main>
       </el-container>
     </div>
@@ -18,5 +22,27 @@ import Header from './header.vue';
 </script>
 
 <style scoped>
+.header-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+}
 
+.main-container {
+  min-height: calc(100vh - 60px);
+  background: #f8f9fa;
+}
+
+/* 页面切换动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

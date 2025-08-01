@@ -1,49 +1,201 @@
 <template>
-  <div class="user-profile-container">
-    <!-- 个人信息部分 -->
-    <div class="user-profile-info" v-if="user">
-      <img :src="user.avatar" alt="User Avatar" class="avatar" />
-      <div class="user-details">
-        <h2>{{ user.nickname }}</h2>
-        <p>ID: {{ user.id }}</p>
-        <p>账户: {{ user.account }}</p>
-        <p>邮箱: {{ user.email || '未提供' }}</p>
-        <p>手机号: {{ user.mobilePhone || '未提供' }}</p>
-        <p>创建日期: {{ formatDate(user.createDate) }}</p>
-      </div>
-      <button @click="editUserInfo">修改个人信息</button>
+  <div class="profile-page">
+    <!-- 顶部导航栏 -->
+    <div class="profile-nav">
+      <button class="back-home-btn" @click="goHome">
+        <span class="back-icon">←</span>
+        返回首页
+      </button>
+      <h2 class="nav-title">个人信息</h2>
     </div>
 
-    <!-- 文章列表部分 -->
-    <div class="article-list-container">
-      <div class="article-list">
-        <h3>文章列表</h3>
-        <div v-if="articleList.length === 0" class="empty-list">没有文章</div>
-        <div v-for="article in articleList" :key="article.id" class="article-card" @click="goToDetail(article.id)">
-          <div class="article-header">
-            <h4>{{ article.title }}</h4>
-            <p>{{ article.summary }}</p>
+    <!-- 顶部用户信息卡片 -->
+    <div class="profile-header">
+      <div class="profile-card">
+        <div class="profile-avatar-section">
+          <div class="avatar-container">
+            <img :src="user?.avatar || '/src/assets/image/userAvatar.png'" alt="User Avatar" class="profile-avatar" />
+            <div class="avatar-overlay">
+              <button class="change-avatar-btn" @click="changeAvatar">
+                <span class="camera-icon">📷</span>
+              </button>
+            </div>
           </div>
-          <div class="article-footer">
-            <p>评论数: {{ article.commentCounts }}</p>
-            <p>浏览量: {{ article.viewCounts }}</p>
-            <p>创建日期: {{ formatDate(article.createDate) }}</p>
-            <p v-if="article.category">分类: {{ article.category }}</p>
+          <div class="profile-info">
+            <h1 class="profile-name">{{ user?.nickname || '用户昵称' }}</h1>
+            <p class="profile-account">@{{ user?.account }}</p>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-number">{{ articleList.length }}</span>
+                <span class="stat-label">文章</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ totalViews }}</span>
+                <span class="stat-label">浏览量</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ totalComments }}</span>
+                <span class="stat-label">评论</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="edit-profile-btn" @click="editUserInfo">
+            <span class="edit-icon">✏️</span>
+            编辑资料
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="profile-content">
+      <!-- 左侧：详细信息 -->
+      <div class="profile-details">
+        <div class="detail-card">
+          <h3 class="card-title">个人信息</h3>
+          <div class="detail-list">
+            <div class="detail-item">
+              <span class="detail-label">用户ID</span>
+              <span class="detail-value">{{ user?.id || '未知' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">邮箱</span>
+              <span class="detail-value">{{ user?.email || '未设置' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">手机号</span>
+              <span class="detail-value">{{ user?.mobilePhone || '未设置' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">注册时间</span>
+              <span class="detail-value">{{ formatDate(user?.createDate) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3 class="card-title">账户统计</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📝</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ articleList.length }}</div>
+                <div class="stat-name">发布文章</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">👁️</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ totalViews }}</div>
+                <div class="stat-name">总浏览量</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">💬</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ totalComments }}</div>
+                <div class="stat-name">总评论数</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-content">
+                <div class="stat-value">{{ averageRating }}</div>
+                <div class="stat-name">平均评分</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：文章列表 -->
+      <div class="articles-section">
+        <div class="articles-header">
+          <h3 class="section-title">我的文章</h3>
+          <div class="articles-filter">
+            <select v-model="sortBy" class="filter-select">
+              <option value="date">按时间排序</option>
+              <option value="views">按浏览量排序</option>
+              <option value="comments">按评论数排序</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="articles-list">
+          <div v-if="articleList.length === 0" class="empty-state">
+            <div class="empty-icon">📝</div>
+            <h4>还没有发布文章</h4>
+            <p>开始创作你的第一篇文章吧！</p>
+            <button class="create-article-btn" @click="createArticle">写文章</button>
+          </div>
+
+          <div v-else class="article-item" v-for="article in sortedArticles" :key="article.id" @click="goToDetail(article.id)">
+            <div class="article-main">
+              <h4 class="article-title">{{ article.title }}</h4>
+              <p class="article-summary">{{ article.summary }}</p>
+              <div class="article-meta">
+                <span class="article-category" v-if="article.category">{{ article.category }}</span>
+                <span class="article-date">{{ formatDate(article.createDate) }}</span>
+              </div>
+            </div>
+            <div class="article-stats">
+              <div class="stat">
+                <span class="stat-icon">👁️</span>
+                <span class="stat-value">{{ article.viewCounts }}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">💬</span>
+                <span class="stat-value">{{ article.commentCounts }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 编辑个人信息表单遮罩层 -->
-    <div v-if="showEditForm" class="edit-form-overlay" @click="cancelEdit" :class="{'show': showEditForm}">
-      <div class="edit-form" @click.stop :class="{'show': showEditForm}">
-        <h3>编辑个人信息</h3>
-        <form @submit.prevent="submitEdit">
-          <input type="text" v-model="editForm.nickname" placeholder="昵称" required />
-          <input type="email" v-model="editForm.email" placeholder="邮箱" required />
-          <input type="tel" v-model="editForm.mobilePhone" placeholder="手机号" />
-          <button type="submit">确认修改</button>
-          <button type="button" @click="cancelEdit">取消</button>
+    <!-- 编辑个人信息模态框 -->
+    <div v-if="showEditForm" class="modal-overlay" @click="cancelEdit">
+      <div class="edit-modal" @click.stop>
+        <div class="modal-header">
+          <h3>编辑个人信息</h3>
+          <button class="close-btn" @click="cancelEdit">×</button>
+        </div>
+        <form @submit.prevent="submitEdit" class="edit-form">
+          <div class="form-group">
+            <label for="nickname">昵称</label>
+            <input 
+              id="nickname"
+              type="text" 
+              v-model="editForm.nickname" 
+              placeholder="请输入昵称" 
+              required 
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">邮箱</label>
+            <input 
+              id="email"
+              type="email" 
+              v-model="editForm.email" 
+              placeholder="请输入邮箱" 
+              required 
+            />
+          </div>
+          <div class="form-group">
+            <label for="mobilePhone">手机号</label>
+            <input 
+              id="mobilePhone"
+              type="tel" 
+              v-model="editForm.mobilePhone" 
+              placeholder="请输入手机号" 
+            />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" @click="cancelEdit">取消</button>
+            <button type="submit" class="save-btn">保存</button>
+          </div>
         </form>
       </div>
     </div>
@@ -51,7 +203,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
 
@@ -81,10 +233,39 @@ const user = ref<User | null>(null);
 const articleList = ref<Article[]>([]);
 const router = useRouter();
 const showEditForm = ref(false);
+const sortBy = ref('date');
 const editForm = ref({
   nickname: '',
   email: '',
   mobilePhone: ''
+});
+
+// 计算属性
+const totalViews = computed(() => {
+  return articleList.value.reduce((sum, article) => sum + article.viewCounts, 0);
+});
+
+const totalComments = computed(() => {
+  return articleList.value.reduce((sum, article) => sum + article.commentCounts, 0);
+});
+
+const averageRating = computed(() => {
+  if (articleList.value.length === 0) return 0;
+  const totalRating = articleList.value.reduce((sum, article) => sum + (article.viewCounts / 100), 0);
+  return (totalRating / articleList.value.length).toFixed(1);
+});
+
+const sortedArticles = computed(() => {
+  const articles = [...articleList.value];
+  switch (sortBy.value) {
+    case 'views':
+      return articles.sort((a, b) => b.viewCounts - a.viewCounts);
+    case 'comments':
+      return articles.sort((a, b) => b.commentCounts - a.commentCounts);
+    case 'date':
+    default:
+      return articles.sort((a, b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime());
+  }
 });
 
 const fetchUserInfo = async () => {
@@ -132,12 +313,14 @@ const submitEdit = async () => {
     const response = await axios.post('/users/changeUserInfo', userData);
     if (response.status === 200) {
       alert('修改成功');
-      window.location.reload();
+      await fetchUserInfo();
+      showEditForm.value = false;
     } else {
       alert('修改失败');
     }
   } catch (error) {
     console.error('Failed to update user info:', error);
+    alert('修改失败，请重试');
   }
 };
 
@@ -145,11 +328,24 @@ const cancelEdit = () => {
   showEditForm.value = false;
 };
 
+const changeAvatar = () => {
+  // 头像更换功能
+  console.log('更换头像');
+};
+
+const createArticle = () => {
+  router.push('/WriteArticle');
+};
+
+const goHome = () => {
+  router.push('/home/index');
+};
+
 const formatDate = (dateString: string) => {
+  if (!dateString) return '未知';
   const date = new Date(dateString);
   return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 };
-
 
 onMounted(() => {
   fetchUserInfo();
@@ -158,79 +354,438 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 容器样式 */
-.user-profile-container {
+.profile-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 0;
+}
+
+/* 顶部导航栏 */
+.profile-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-home-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.back-home-btn:hover {
+  background: #e9ecef;
+  color: #333;
+  border-color: #adb5bd;
+}
+
+.back-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.nav-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* 顶部用户信息卡片 */
+.profile-header {
+  padding: 40px;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.profile-card {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(to right, #ffffff, #f0f0f0);
+  align-items: center;
 }
 
-/* 用户信息部分样式 */
-.user-profile-info {
-  flex-basis: 300px;
-  margin-right: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  transition: transform 0.3s ease-in-out;
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
-.user-profile-info:hover {
-  transform: translateY(-5px);
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
 }
 
-.avatar {
+.profile-avatar {
   width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  border: 4px solid #f0f0f0;
+  transition: all 0.3s ease;
 }
 
-.avatar:hover {
-  transform: scale(1.05);
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.user-details h2 {
-  margin: 0;
+.avatar-container:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.change-avatar-btn {
+  background: none;
+  border: none;
+  color: white;
   font-size: 24px;
-  color: #333;
+  cursor: pointer;
 }
 
-.user-details p {
-  margin: 5px 0;
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.profile-account {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 30px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #06bac7;
+}
+
+.stat-label {
+  font-size: 14px;
   color: #666;
 }
 
-/* 文章列表部分样式 */
-.article-list-container {
-  flex-grow: 1;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  overflow-y: auto;
+.profile-actions {
+  display: flex;
+  gap: 12px;
 }
 
-/* 文章卡片样式 */
-.article-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
+.edit-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #06bac7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.article-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.edit-profile-btn:hover {
+  background: #05a3b0;
 }
 
-/* 编辑表单遮罩层样式 */
-.edit-form-overlay {
+/* 主要内容区域 */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* 左侧详细信息 */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e1e5e9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 20px 0;
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #06bac7;
+  line-height: 1;
+}
+
+.stat-name {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* 右侧文章列表 */
+.articles-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e1e5e9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.articles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+  border-color: #06bac7;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.empty-state p {
+  margin: 0 0 24px 0;
+}
+
+.create-article-btn {
+  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.create-article-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(6, 186, 199, 0.3);
+}
+
+.article-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.article-item:hover {
+  border-color: #06bac7;
+  box-shadow: 0 4px 12px rgba(6, 186, 199, 0.1);
+  transform: translateY(-2px);
+}
+
+.article-main {
+  flex: 1;
+}
+
+.article-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.article-summary {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #999;
+}
+
+.article-category {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #666;
+}
+
+.article-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.stat-icon {
+  font-size: 14px;
+}
+
+/* 模态框样式 */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -238,105 +793,172 @@ onMounted(() => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 2000;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
 }
 
-.edit-form-overlay.show {
-  opacity: 1;
-  visibility: visible;
+.edit-modal {
+  background: white;
+  border-radius: 16px;
+  width: 500px;
+  max-width: 90vw;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* 编辑表单样式 */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
 .edit-form {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  max-width: 90%;
-  position: relative;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.3s, transform 0.3s;
+  padding: 24px;
 }
 
-.edit-form.show {
-  opacity: 1;
-  transform: scale(1);
+.form-group {
+  margin-bottom: 20px;
 }
 
-/* 表单输入框和按钮样式 */
-.edit-form input,
-.edit-form button {
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.form-group input {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box; /* 添加这个属性以确保padding不影响宽度 */
-}
-
-.edit-form input {
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  transition: border-color 0.3s, background-color 0.3s;
-}
-
-.edit-form input:focus {
-  border-color: #007bff;
-  background-color: #fff;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
   outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-.edit-form button {
-  background-color: #17b88a;
-  color: white;
-  cursor: pointer;
-  text-transform: uppercase; /* 使按钮文本大写 */
-  letter-spacing: 0.5px; /* 字母间距 */
-  transition: background-color 0.3s, transform 0.3s;
+.form-group input:focus {
+  border-color: #06bac7;
 }
 
-.edit-form button:hover {
-  background-color: #17b88a;
-  transform: translateY(-2px);
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
 }
 
-.edit-form button:active {
-  background-color: #17b88a;
-  transform: translateY(1px);
-}
-
-.edit-form button[type="button"] {
-  background-color: #6c757d;
-}
-
-/* 按钮悬停效果 */
-.user-profile-info button {
-  background-color: #388E03;
-  color: white;
+.cancel-btn, .save-btn {
+  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-.user-profile-info button:hover {
-  background-color: #388E03;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #666;
 }
 
-.user-profile-info button:active {
-  background-color: #388E03;
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  color: white;
+}
+
+.save-btn:hover {
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(6, 186, 199, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  
+  .profile-avatar-section {
+    flex-direction: column;
+  }
+  
+  .profile-stats {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 16px;
+  }
+  
+  .profile-card {
+    padding: 20px;
+  }
+  
+  .avatar-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-name {
+    font-size: 24px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .article-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .article-stats {
+    align-self: flex-end;
+  }
 }
 </style>

@@ -61,7 +61,7 @@ const goToDetail = (id: number) => {
   router.push({ name: 'ArticleDetail', params: { id: id.toString() } });
 };
 
-onMounted(async () => {
+const fetchArticles = async () => {
   try {
     const response = await axios.post('http://localhost:8888/articles', {
       page: props.page,
@@ -73,6 +73,15 @@ onMounted(async () => {
   } catch (error) {
     console.error('Failed to fetch articles:', error);
   }
+};
+
+onMounted(fetchArticles);
+
+// 监听 categoryId 变化
+import { watch } from 'vue';
+watch(() => props.categoryId, (newCategoryId) => {
+  console.log('CategoryId changed to:', newCategoryId);
+  fetchArticles();
 });
 const formatDate = (date: string) => {
   const timestamp = Date.parse(date);

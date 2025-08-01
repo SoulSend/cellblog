@@ -1,6 +1,6 @@
 <template>
-  <div class="login-container">
-    <div class="login-card">
+  <div v-if="visible" class="login-modal-overlay" @click="closeModal">
+    <div class="login-modal" @click.stop>
       <!-- 左侧海报区域 -->
       <div class="poster-section">
         <div class="poster-content">
@@ -13,6 +13,7 @@
       <!-- 右侧表单区域 -->
       <div class="form-section">
         <div class="form-container">
+          <button class="close-btn" @click="closeModal">×</button>
           <h2 class="form-title">{{ isLogin ? "登录" : "注册" }}</h2>
           <form @submit.prevent="onSubmit" class="login-form">
             <div class="form-group">
@@ -80,20 +81,33 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { reactive, ref } from "vue";
+import { reactive, ref, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/index";
 
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const emit = defineEmits(['close', 'login-success']);
+
 const router = useRouter();
-const isLogin = ref(true); // Track whether we are on login or register
+const isLogin = ref(true);
 const form = reactive({
   account: "",
   password: "",
-  nickname: "", // Only needed for registration
-  confirmPassword: "", // Only needed for registration
+  nickname: "",
+  confirmPassword: "",
 });
 
 const store = useAuthStore();
+
+function closeModal() {
+  emit('close');
+}
 
 function onSubmit() {
   if (isLogin.value) {
@@ -116,10 +130,11 @@ async function login() {
     if (response.data.code === 200) {
       let token = response.data.data;
       localStorage.setItem("token_CellBlog", token);
-      store.login( token);
-      store.setUser(response.data.data)
-      router.replace("/home/index");
-      await fetchUserInfo(); // 移动到登录成功后调用
+      store.login(token);
+      store.setUser(response.data.data);
+      await fetchUserInfo();
+      emit('login-success');
+      closeModal();
     } else {
       alert("账号或者密码错误");
     }
@@ -143,10 +158,11 @@ async function register() {
     if (response.data.code === 200) {
       let token = response.data.data;
       localStorage.setItem("token_CellBlog", token);
-      store.login( token);
-      store.setUser(response.data.data) 
-      router.replace("/home/index");
-      await fetchUserInfo(); // 移动到注册成功后调用
+      store.login(token);
+      store.setUser(response.data.data);
+      await fetchUserInfo();
+      emit('login-success');
+      closeModal();
     } else {
       alert("注册失败，请重试");
     }
@@ -156,7 +172,6 @@ async function register() {
   }
 }
 
-// 修改 fetchUserInfo 方法
 async function fetchUserInfo() {
   try {
     const token = localStorage.getItem("token_CellBlog");
@@ -170,7 +185,6 @@ async function fetchUserInfo() {
     });
     if (response.data.code === 200) {
       const userData = response.data.data;
-      // 检查账号是否被封禁
       if (userData.ban) {
         alert("您的账号已被封禁，请联系管理员邮箱：hrc_2525@qq.com");
         store.logout();
@@ -178,7 +192,7 @@ async function fetchUserInfo() {
         store.setUser(userData);
       }
     }
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Fetch user info error:", error);
     if (error.response && error.response.status === 401) {
       alert("Session expired. Please log in again.");
@@ -199,15 +213,21 @@ function toggleForm() {
 </script>
 
 <style scoped>
-.login-container {
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.login-card {
+.login-modal {
   display: flex;
   width: 900px;
   height: 600px;
@@ -215,7 +235,17 @@ function toggleForm() {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  animation: slideUp 0.6s ease-out;
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -288,6 +318,30 @@ function toggleForm() {
   align-items: center;
   justify-content: center;
   padding: 40px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .form-container {
@@ -390,7 +444,7 @@ function toggleForm() {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .login-card {
+  .login-modal {
     width: 95%;
     height: auto;
     flex-direction: column;
@@ -417,11 +471,11 @@ function toggleForm() {
 }
 
 @media (max-width: 480px) {
-  .login-container {
+  .login-modal-overlay {
     padding: 20px;
   }
   
-  .login-card {
+  .login-modal {
     width: 100%;
     border-radius: 15px;
   }
@@ -442,4 +496,4 @@ function toggleForm() {
     padding: 20px 15px;
   }
 }
-</style>
+</style> 
