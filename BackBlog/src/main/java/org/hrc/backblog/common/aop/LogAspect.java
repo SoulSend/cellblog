@@ -48,7 +48,7 @@ public class LogAspect {
         String methodName = signature.getName();
         log.info("request method:{}",className + "." + methodName + "()");
 
-//        //请求的参数
+        //请求的参数
         Object[] args = joinPoint.getArgs();
         String params = JSON.toJSONString(args[0]);
         log.info("params:{}",params);
@@ -58,7 +58,7 @@ public class LogAspect {
         log.info("ip:{}", IpUtils.getIpAddr(request));
 
 
-        log.info("excute time : {} ms",time);
+        log.info("execute time : {} ms",time);
         log.info("=====================log end================================");
     }
 }

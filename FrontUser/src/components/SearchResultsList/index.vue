@@ -11,8 +11,19 @@
           <span class="article-author">作者：{{ article.author }}</span>
           <span class="article-date">发布日期：{{ article.createDate }}</span>
           <span class="article-category">文章类型：{{ article.category.categoryName }}</span>
-          <span class="article-views">👀浏览量： {{ article.viewCounts }}</span>
-          <span class="article-comments">💬评论数： {{ article.commentCounts }}</span>
+          <span class="article-views">
+            <svg class="view-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            浏览量： {{ article.viewCounts }}
+          </span>
+          <span class="article-comments">
+            <svg class="comment-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            评论数： {{ article.commentCounts }}
+          </span>
         </div>
       </li>
     </ul>
@@ -238,6 +249,16 @@ onMounted(() => {
   font-weight: bold;
   color: #333;
   font-size: 1rem;
+}
+
+.view-icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.comment-icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {

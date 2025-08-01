@@ -60,7 +60,6 @@ public class LoginInterceptor implements HandlerInterceptor {
          * 为了后续的处理程序能够获得当前会话的用户信息，将会话用户放入threadLocal里面保存，方便调用
          * 一定要记得，在处理完毕，所有方法调用完毕以后，要清除ThreadLocal里面的数据，防止内存泄漏
          */
-        System.out.println(sysUser.getNickname());
         UserThreadLocal.put(sysUser);
         return true;
     }

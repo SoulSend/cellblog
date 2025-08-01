@@ -3,7 +3,10 @@
     <!-- 顶部导航栏 -->
     <div class="profile-nav">
       <button class="back-home-btn" @click="goHome">
-        <span class="back-icon">←</span>
+        <svg class="back-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12,19 5,12 12,5"></polyline>
+        </svg>
         返回首页
       </button>
       <h2 class="nav-title">个人信息</h2>
@@ -17,7 +20,10 @@
             <img :src="user?.avatar || '/src/assets/image/userAvatar.png'" alt="User Avatar" class="profile-avatar" />
             <div class="avatar-overlay">
               <button class="change-avatar-btn" @click="changeAvatar">
-                <span class="camera-icon">📷</span>
+                <svg class="camera-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
               </button>
             </div>
           </div>
@@ -42,7 +48,10 @@
         </div>
         <div class="profile-actions">
           <button class="edit-profile-btn" @click="editUserInfo">
-            <span class="edit-icon">✏️</span>
+            <svg class="edit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
             编辑资料
           </button>
         </div>
@@ -54,7 +63,13 @@
       <!-- 左侧：详细信息 -->
       <div class="profile-details">
         <div class="detail-card">
-          <h3 class="card-title">个人信息</h3>
+          <h3 class="card-title">
+            <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            个人信息
+          </h3>
           <div class="detail-list">
             <div class="detail-item">
               <span class="detail-label">用户ID</span>
@@ -76,31 +91,53 @@
         </div>
 
         <div class="detail-card">
-          <h3 class="card-title">账户统计</h3>
+          <h3 class="card-title">
+            <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+            账户统计
+          </h3>
           <div class="stats-grid">
             <div class="stat-card">
-              <div class="stat-icon">📝</div>
+              <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14,2 14,8 20,8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10,9 9,9 8,9"></polyline>
+              </svg>
               <div class="stat-content">
                 <div class="stat-value">{{ articleList.length }}</div>
                 <div class="stat-name">发布文章</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon">👁️</div>
+              <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
               <div class="stat-content">
                 <div class="stat-value">{{ totalViews }}</div>
                 <div class="stat-name">总浏览量</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon">💬</div>
+              <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
               <div class="stat-content">
                 <div class="stat-value">{{ totalComments }}</div>
                 <div class="stat-name">总评论数</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon">⭐</div>
+              <svg class="stat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+              </svg>
               <div class="stat-content">
                 <div class="stat-value">{{ averageRating }}</div>
                 <div class="stat-name">平均评分</div>
@@ -113,22 +150,48 @@
       <!-- 右侧：文章列表 -->
       <div class="articles-section">
         <div class="articles-header">
-          <h3 class="section-title">我的文章</h3>
+          <h3 class="section-title">
+            <svg class="section-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+            我的文章
+          </h3>
           <div class="articles-filter">
-            <select v-model="sortBy" class="filter-select">
-              <option value="date">按时间排序</option>
-              <option value="views">按浏览量排序</option>
-              <option value="comments">按评论数排序</option>
-            </select>
+            <div class="select-wrapper">
+              <select v-model="sortBy" class="filter-select">
+                <option value="date">按时间排序</option>
+                <option value="views">按浏览量排序</option>
+                <option value="comments">按评论数排序</option>
+              </select>
+              <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9"></polyline>
+              </svg>
+            </div>
           </div>
         </div>
 
         <div class="articles-list">
           <div v-if="articleList.length === 0" class="empty-state">
-            <div class="empty-icon">📝</div>
+            <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
             <h4>还没有发布文章</h4>
             <p>开始创作你的第一篇文章吧！</p>
-            <button class="create-article-btn" @click="createArticle">写文章</button>
+            <button class="create-article-btn" @click="createArticle">
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              写文章
+            </button>
           </div>
 
           <div v-else class="article-item" v-for="article in sortedArticles" :key="article.id" @click="goToDetail(article.id)">
@@ -142,11 +205,16 @@
             </div>
             <div class="article-stats">
               <div class="stat">
-                <span class="stat-icon">👁️</span>
+                <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
                 <span class="stat-value">{{ article.viewCounts }}</span>
               </div>
               <div class="stat">
-                <span class="stat-icon">💬</span>
+                <svg class="stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
                 <span class="stat-value">{{ article.commentCounts }}</span>
               </div>
             </div>
@@ -156,49 +224,92 @@
     </div>
 
     <!-- 编辑个人信息模态框 -->
-    <div v-if="showEditForm" class="modal-overlay" @click="cancelEdit">
-      <div class="edit-modal" @click.stop>
-        <div class="modal-header">
-          <h3>编辑个人信息</h3>
-          <button class="close-btn" @click="cancelEdit">×</button>
+    <Teleport to="body">
+      <div v-if="showEditForm" class="modal-overlay" @click="cancelEdit">
+        <div class="edit-modal" @click.stop>
+          <div class="modal-header">
+            <h3>
+              <svg class="modal-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              编辑个人信息
+            </h3>
+            <button class="close-btn" @click="cancelEdit">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <form @submit.prevent="submitEdit" class="edit-form">
+            <div class="form-group">
+              <label for="nickname">
+                <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                昵称
+              </label>
+              <input 
+                id="nickname"
+                type="text" 
+                v-model="editForm.nickname" 
+                placeholder="请输入昵称" 
+                required 
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">
+                <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                邮箱
+              </label>
+              <input 
+                id="email"
+                type="email" 
+                v-model="editForm.email" 
+                placeholder="请输入邮箱" 
+                required 
+              />
+            </div>
+            <div class="form-group">
+              <label for="mobilePhone">
+                <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                手机号
+              </label>
+              <input 
+                id="mobilePhone"
+                type="tel" 
+                v-model="editForm.mobilePhone" 
+                placeholder="请输入手机号" 
+              />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="cancel-btn" @click="cancelEdit">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                取消
+              </button>
+              <button type="submit" class="save-btn">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                  <polyline points="7,3 7,8 15,8"></polyline>
+                </svg>
+                保存
+              </button>
+            </div>
+          </form>
         </div>
-        <form @submit.prevent="submitEdit" class="edit-form">
-          <div class="form-group">
-            <label for="nickname">昵称</label>
-            <input 
-              id="nickname"
-              type="text" 
-              v-model="editForm.nickname" 
-              placeholder="请输入昵称" 
-              required 
-            />
-          </div>
-          <div class="form-group">
-            <label for="email">邮箱</label>
-            <input 
-              id="email"
-              type="email" 
-              v-model="editForm.email" 
-              placeholder="请输入邮箱" 
-              required 
-            />
-          </div>
-          <div class="form-group">
-            <label for="mobilePhone">手机号</label>
-            <input 
-              id="mobilePhone"
-              type="tel" 
-              v-model="editForm.mobilePhone" 
-              placeholder="请输入手机号" 
-            />
-          </div>
-          <div class="form-actions">
-            <button type="button" class="cancel-btn" @click="cancelEdit">取消</button>
-            <button type="submit" class="save-btn">保存</button>
-          </div>
-        </form>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -330,7 +441,6 @@ const cancelEdit = () => {
 
 const changeAvatar = () => {
   // 头像更换功能
-  console.log('更换头像');
 };
 
 const createArticle = () => {
@@ -356,7 +466,7 @@ onMounted(() => {
 <style scoped>
 .profile-page {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   padding: 0;
 }
 
@@ -364,51 +474,50 @@ onMounted(() => {
 .profile-nav {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px 40px;
-  background: white;
-  border-bottom: 1px solid #e1e5e9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-10);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .back-home-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #f8f9fa;
-  border: 1px solid #e1e5e9;
-  color: #666;
-  font-size: 14px;
+  gap: var(--space-2);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
 }
 
 .back-home-btn:hover {
-  background: #e9ecef;
-  color: #333;
-  border-color: #adb5bd;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
 }
 
 .back-icon {
-  font-size: 16px;
-  font-weight: bold;
+  flex-shrink: 0;
 }
 
 .nav-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
 }
 
 /* 顶部用户信息卡片 */
 .profile-header {
-  padding: 40px;
-  background: white;
-  border-bottom: 1px solid #e1e5e9;
+  padding: var(--space-10);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .profile-card {
@@ -422,7 +531,7 @@ onMounted(() => {
 .profile-avatar-section {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: var(--space-6);
 }
 
 .avatar-container {
@@ -436,8 +545,8 @@ onMounted(() => {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #f0f0f0;
-  transition: all 0.3s ease;
+  border: 4px solid var(--border-light);
+  transition: all var(--transition-normal);
 }
 
 .avatar-overlay {
@@ -452,7 +561,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-normal);
 }
 
 .avatar-container:hover .avatar-overlay {
@@ -463,8 +572,18 @@ onMounted(() => {
   background: none;
   border: none;
   color: white;
-  font-size: 24px;
   cursor: pointer;
+  padding: var(--space-2);
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.change-avatar-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.camera-icon {
+  flex-shrink: 0;
 }
 
 .profile-info {
@@ -472,21 +591,21 @@ onMounted(() => {
 }
 
 .profile-name {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #333;
-  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2) 0;
 }
 
 .profile-account {
-  font-size: 16px;
-  color: #666;
-  margin: 0 0 20px 0;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-5) 0;
 }
 
 .profile-stats {
   display: flex;
-  gap: 30px;
+  gap: var(--space-8);
 }
 
 .stat-item {
@@ -495,84 +614,98 @@ onMounted(() => {
 
 .stat-number {
   display: block;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #06bac7;
+  color: var(--primary-color);
 }
 
 .stat-label {
-  font-size: 14px;
-  color: #666;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 .profile-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .edit-profile-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #06bac7;
+  gap: var(--space-2);
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .edit-profile-btn:hover {
-  background: #05a3b0;
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.edit-icon {
+  flex-shrink: 0;
 }
 
 /* 主要内容区域 */
 .profile-content {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 40px;
+  gap: var(--space-10);
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px;
+  padding: var(--space-10);
 }
 
 /* 左侧详细信息 */
 .profile-details {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
 }
 
 .detail-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e1e5e9;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-5) 0;
+}
+
+.card-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .detail-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .detail-item:last-child {
@@ -580,40 +713,42 @@ onMounted(() => {
 }
 
 .detail-label {
-  font-size: 14px;
-  color: #666;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .detail-value {
-  font-size: 14px;
-  color: #333;
+  font-size: 0.875rem;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .stat-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 12px;
-  transition: all 0.3s ease;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
 }
 
 .stat-card:hover {
-  background: #e9ecef;
+  background: var(--bg-tertiary);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-icon {
-  font-size: 24px;
+  color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .stat-content {
@@ -621,112 +756,150 @@ onMounted(() => {
 }
 
 .stat-value {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #06bac7;
+  color: var(--primary-color);
   line-height: 1;
 }
 
 .stat-name {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
 }
 
 /* 右侧文章列表 */
 .articles-section {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e1e5e9;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .articles-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 
 .section-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
 }
 
+.section-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.articles-filter {
+  position: relative;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
 .filter-select {
-  padding: 8px 12px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all var(--transition-fast);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  appearance: none;
+  padding-right: calc(var(--space-3) + 16px + var(--space-2));
 }
 
 .filter-select:focus {
-  border-color: #06bac7;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(6, 186, 199, 0.1);
+}
+
+.select-icon {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
 }
 
 .articles-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #666;
+  padding: var(--space-15) var(--space-5);
+  color: var(--text-secondary);
 }
 
 .empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-4);
 }
 
 .empty-state h4 {
-  font-size: 18px;
-  margin: 0 0 8px 0;
-  color: #333;
+  font-size: 1.125rem;
+  margin: 0 0 var(--space-2) 0;
+  color: var(--text-primary);
 }
 
 .empty-state p {
-  margin: 0 0 24px 0;
+  margin: 0 0 var(--space-6) 0;
 }
 
 .create-article-btn {
-  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .create-article-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(6, 186, 199, 0.3);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-icon {
+  flex-shrink: 0;
 }
 
 .article-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
+  padding: var(--space-5);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .article-item:hover {
-  border-color: #06bac7;
-  box-shadow: 0 4px 12px rgba(6, 186, 199, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
@@ -735,17 +908,17 @@ onMounted(() => {
 }
 
 .article-title {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
-  color: #333;
-  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2) 0;
   line-height: 1.4;
 }
 
 .article-summary {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 12px 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-3) 0;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -755,33 +928,33 @@ onMounted(() => {
 
 .article-meta {
   display: flex;
-  gap: 16px;
-  font-size: 12px;
-  color: #999;
+  gap: var(--space-4);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
 }
 
 .article-category {
-  background: #f0f0f0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  color: #666;
+  background: var(--bg-secondary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
 }
 
 .article-stats {
   display: flex;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: #666;
+  gap: var(--space-1);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
 }
 
 .stat-icon {
-  font-size: 14px;
+  flex-shrink: 0;
 }
 
 /* 模态框样式 */
@@ -789,123 +962,148 @@ onMounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 9999;
 }
 
 .edit-modal {
-  background: white;
-  border-radius: 16px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
   width: 500px;
   max-width: 90vw;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-light);
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 24px 0;
+  padding: var(--space-6) var(--space-6) 0;
 }
 
 .modal-header h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
+}
+
+.modal-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 24px;
+  color: var(--text-tertiary);
   cursor: pointer;
-  color: #999;
-  padding: 0;
+  padding: var(--space-1);
+  border-radius: 50%;
+  transition: all var(--transition-fast);
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .edit-form {
-  padding: 24px;
+  padding: var(--space-6);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
 }
 
 .form-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.label-icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all var(--transition-fast);
   box-sizing: border-box;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-group input:focus {
-  border-color: #06bac7;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(6, 186, 199, 0.1);
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   justify-content: flex-end;
-  margin-top: 24px;
+  margin-top: var(--space-6);
 }
 
 .cancel-btn, .save-btn {
-  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .cancel-btn {
-  background-color: #f0f0f0;
-  color: #666;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .cancel-btn:hover {
-  background-color: #e0e0e0;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  background: var(--primary-color);
   color: white;
 }
 
 .save-btn:hover {
+  background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(6, 186, 199, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 /* 响应式设计 */
@@ -917,7 +1115,7 @@ onMounted(() => {
   .profile-card {
     flex-direction: column;
     text-align: center;
-    gap: 20px;
+    gap: var(--space-5);
   }
   
   .profile-avatar-section {
@@ -931,11 +1129,11 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .profile-page {
-    padding: 16px;
+    padding: var(--space-4);
   }
   
   .profile-card {
-    padding: 20px;
+    padding: var(--space-5);
   }
   
   .avatar-container {
@@ -944,7 +1142,7 @@ onMounted(() => {
   }
   
   .profile-name {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   
   .stats-grid {
@@ -954,7 +1152,7 @@ onMounted(() => {
   .article-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--space-3);
   }
   
   .article-stats {

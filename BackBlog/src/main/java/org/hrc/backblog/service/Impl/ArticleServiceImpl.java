@@ -2,6 +2,9 @@ package org.hrc.backblog.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.hrc.backblog.dao.dos.Archives;
 import org.hrc.backblog.dao.mapper.ArticleBodyMapper;
 import org.hrc.backblog.dao.mapper.ArticleMapper;
@@ -19,12 +22,17 @@ import org.hrc.backblog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@Slf4j
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
@@ -40,6 +48,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleBodyService articleBodyService;
     @Autowired
     private CommentsService commentsService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     //文章类型服务接口，忘记打Service 有空再改
     @Autowired
     private ArticleCategory articleCategory;
@@ -113,6 +123,31 @@ public class ArticleServiceImpl implements ArticleService {
         queryWrapper.last("limit "+limit);
         //select id,title from ms_article oder by view_counts desc limit 5
         List<Article> articles = articleMapper.selectList(queryWrapper);
+        // 3. 批量缓存到Redis（一次性操作）
+        if (!articles.isEmpty()) {
+            // 3.1 创建键值对映射
+            Map<String, String> articleMap = new HashMap<>(articles.size());
+
+            // 3.2 使用Jackson序列化
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            for (Article article : articles) {
+                try {
+                    String json = objectMapper.writeValueAsString(article);
+                    articleMap.put("hotArticle:" + article.getId(), json);
+                } catch (JsonProcessingException e) {
+                    log.error("文章序列化失败: {}", article.getId(), e);
+                }
+            }
+            // 3.3 一次性设置多个键值对
+            stringRedisTemplate.opsForValue().multiSet(articleMap);
+
+            // 3.4 设置过期时间（可选）
+            Duration expireTime = Duration.ofHours(24);
+            for (String key : articleMap.keySet()) {
+                stringRedisTemplate.expire(key, expireTime);
+            }
+        }
         return Result.success(copyList(articles,false,false,false));
     }
     /**
@@ -154,6 +189,9 @@ public class ArticleServiceImpl implements ArticleService {
          * 转换成对应的vo类，封装到响应的articleVo类里面
          * 返回封装为Result类的articleVo
          */
+        // todo 先查缓存
+
+        //缓存不存在 查数据库
         Article article = articleMapper.selectById(id);
         if(article==null){
             return Result.fail(ErrorCode.ARTICLE_ABSENT.getCode(), ErrorCode.ARTICLE_ABSENT.getMsg());

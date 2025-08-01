@@ -1,82 +1,134 @@
 <template>
-  <div v-if="visible" class="login-modal-overlay" @click="closeModal">
-    <div class="login-modal" @click.stop>
-      <!-- 左侧海报区域 -->
-      <div class="poster-section">
-        <div class="poster-content">
-          <img src="@/assets/image/logo.png" alt="Logo" class="poster-logo" />
-          <h2 class="poster-title">欢迎来到 CELL</h2>
-          <p class="poster-subtitle">分享你的技术见解，连接更多开发者</p>
-        </div>
-      </div>
+  <Teleport to="body">
+    <div v-if="visible" class="login-modal-overlay" @click="closeModal">
+      <div class="login-modal" @click.stop>
+        <!-- 关闭按钮 -->
+        <button class="close-btn" @click="closeModal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
 
-      <!-- 右侧表单区域 -->
-      <div class="form-section">
-        <div class="form-container">
-          <button class="close-btn" @click="closeModal">×</button>
-          <h2 class="form-title">{{ isLogin ? "登录" : "注册" }}</h2>
-          <form @submit.prevent="onSubmit" class="login-form">
-            <div class="form-group">
-              <label for="username">用户名</label>
-              <input
-                type="text"
-                id="username"
-                v-model="form.account"
-                required
-                placeholder="请输入用户名"
-                class="input-field"
-              />
+        <!-- 左侧海报区域 -->
+        <div class="poster-section">
+          <div class="poster-content">
+            <div class="logo-container">
+              <img src="@/assets/image/logo.png" alt="CELL" class="poster-logo" />
             </div>
-            <div class="form-group">
-              <label for="password">密码</label>
-              <input
-                type="password"
-                id="password"
-                v-model="form.password"
-                required
-                placeholder="请输入密码"
-                class="input-field"
-              />
+            <h2 class="poster-title">CELL Blog</h2>
+            <p class="poster-subtitle">分享技术，连接世界</p>
+            <div class="poster-decoration">
+              <div class="decoration-line"></div>
+              <div class="decoration-dot"></div>
+              <div class="decoration-line"></div>
             </div>
-            <div class="form-group" v-if="!isLogin">
-              <label for="confirm-password">确认密码</label>
-              <input
-                type="password"
-                id="confirm-password"
-                v-model="form.confirmPassword"
-                required
-                placeholder="请确认密码"
-                class="input-field"
-              />
-            </div>
-            <div class="form-group" v-if="!isLogin">
-              <label for="nickname">昵称</label>
-              <input
-                type="text"
-                id="nickname"
-                v-model="form.nickname"
-                required
-                placeholder="请输入昵称"
-                class="input-field"
-              />
-            </div>
+          </div>
+        </div>
+
+        <!-- 右侧表单区域 -->
+        <div class="form-section">
+          <div class="form-container">
+            <h2 class="form-title">{{ isLogin ? "欢迎回来" : "加入我们" }}</h2>
+            <p class="form-subtitle">{{ isLogin ? "登录您的账户" : "创建您的账户" }}</p>
             
-            <button type="submit" class="btn btn-primary">
-              {{ isLogin ? "登录" : "注册" }}
-            </button>
-            <div class="additional-actions">
-              <button type="button" class="btn btn-link" @click="forgotPassword">
-                忘记密码?
+            <form @submit.prevent="onSubmit" class="login-form">
+              <div class="form-group">
+                <label for="username">用户名</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <input
+                    type="text"
+                    id="username"
+                    v-model="form.account"
+                    required
+                    placeholder="请输入用户名"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="password">密码</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <circle cx="12" cy="16" r="1"></circle>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <input
+                    type="password"
+                    id="password"
+                    v-model="form.password"
+                    required
+                    placeholder="请输入密码"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+              
+              <div class="form-group" v-if="!isLogin">
+                <label for="confirm-password">确认密码</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <circle cx="12" cy="16" r="1"></circle>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    v-model="form.confirmPassword"
+                    required
+                    placeholder="请确认密码"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+              
+              <div class="form-group" v-if="!isLogin">
+                <label for="nickname">昵称</label>
+                <div class="input-wrapper">
+                  <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <input
+                    type="text"
+                    id="nickname"
+                    v-model="form.nickname"
+                    required
+                    placeholder="请输入昵称"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">
+                <span class="btn-text">{{ isLogin ? "登录" : "注册" }}</span>
+                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12,5 19,12 12,19"></polyline>
+                </svg>
               </button>
-              <button type="button" class="btn btn-link" @click="toggleForm">
-                {{ isLogin ? "注册" : "登录" }}
-              </button>
-            </div>
-          </form>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-link" @click="forgotPassword" v-if="isLogin">
+                  忘记密码?
+                </button>
+                <button type="button" class="btn btn-link" @click="toggleForm">
+                  {{ isLogin ? "没有账户? 注册" : "已有账户? 登录" }}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -217,13 +269,14 @@ function toggleForm() {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: 9999;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -231,12 +284,13 @@ function toggleForm() {
   display: flex;
   width: 900px;
   height: 600px;
-  background: white;
-  border-radius: 20px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
   animation: slideUp 0.3s ease-out;
   position: relative;
+  border: 1px solid var(--border-light);
 }
 
 @keyframes fadeIn {
@@ -251,18 +305,43 @@ function toggleForm() {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+/* 关闭按钮 */
+.close-btn {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1.1);
 }
 
 /* 左侧海报区域 */
 .poster-section {
-  flex: 2;
-  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,78 +349,69 @@ function toggleForm() {
   overflow: hidden;
 }
 
-.poster-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('@/assets/image/logo.png') center/cover;
-  opacity: 0.1;
-  z-index: 1;
-}
-
 .poster-content {
   text-align: center;
   color: white;
   z-index: 2;
   position: relative;
+  padding: var(--space-6);
+}
+
+.logo-container {
+  margin-bottom: var(--space-6);
 }
 
 .poster-logo {
-  width: 120px;
-  height: auto;
-  margin-bottom: 30px;
-  filter: brightness(0) invert(1);
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  padding: var(--space-3);
+  backdrop-filter: blur(10px);
 }
 
 .poster-title {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.5px;
 }
 
 .poster-subtitle {
-  font-size: 16px;
+  font-size: 1rem;
   opacity: 0.9;
   line-height: 1.6;
-  max-width: 250px;
-  margin: 0 auto;
+  margin-bottom: var(--space-6);
+}
+
+.poster-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.decoration-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.decoration-dot {
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
 }
 
 /* 右侧表单区域 */
 .form-section {
-  flex: 3;
+  flex: 1.5;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.close-btn:hover {
-  background-color: #f0f0f0;
-  color: #333;
+  padding: var(--space-8);
+  background: var(--bg-primary);
 }
 
 .form-container {
@@ -350,11 +420,18 @@ function toggleForm() {
 }
 
 .form-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
   text-align: center;
-  color: #333;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 30px;
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: var(--space-8);
 }
 
 .login-form {
@@ -362,83 +439,112 @@ function toggleForm() {
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-4);
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  color: #555;
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.875rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--text-tertiary);
+  z-index: 1;
 }
 
 .input-field {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  background-color: #fafbfc;
+  padding: var(--space-3) var(--space-3) var(--space-3) calc(var(--space-3) + 20px + var(--space-2));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #06bac7;
-  background-color: white;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(6, 186, 199, 0.1);
 }
 
+.input-field::placeholder {
+  color: var(--text-tertiary);
+}
+
 .btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   width: 100%;
-  padding: 12px;
+  padding: var(--space-3) var(--space-4);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  text-decoration: none;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #06bac7 0%, #008db2 100%);
+  background: var(--primary-color);
   color: white;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(6, 186, 199, 0.3);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:active {
   transform: translateY(0);
 }
 
-.additional-actions {
+.btn-icon {
+  transition: transform var(--transition-fast);
+}
+
+.btn-primary:hover .btn-icon {
+  transform: translateX(2px);
+}
+
+.form-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
+  margin-top: var(--space-4);
 }
 
 .btn-link {
   background: none;
-  color: #06bac7;
+  color: var(--primary-color);
   text-decoration: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: 0;
   border: none;
-  transition: color 0.3s ease;
+  transition: color var(--transition-fast);
 }
 
 .btn-link:hover {
-  color: #008db2;
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
@@ -449,6 +555,7 @@ function toggleForm() {
     height: auto;
     flex-direction: column;
     min-height: 600px;
+    margin: var(--space-4);
   }
   
   .poster-section {
@@ -458,26 +565,26 @@ function toggleForm() {
   
   .form-section {
     flex: none;
-    padding: 30px 20px;
+    padding: var(--space-6) var(--space-4);
   }
   
   .poster-title {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   
   .form-title {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .login-modal-overlay {
-    padding: 20px;
+    padding: var(--space-4);
   }
   
   .login-modal {
     width: 100%;
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
   }
   
   .poster-section {
@@ -485,15 +592,16 @@ function toggleForm() {
   }
   
   .poster-logo {
-    width: 80px;
+    width: 60px;
+    height: 60px;
   }
   
   .poster-title {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
   
   .form-section {
-    padding: 20px 15px;
+    padding: var(--space-4) var(--space-3);
   }
 }
 </style> 

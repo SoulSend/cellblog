@@ -1,6 +1,6 @@
 <template>
   <div class="frontend-container">
-    <List :categoryId="categoryId"></List>
+    <List :category="props.category" :key="props.category"></List>
   </div>
 </template>
 
@@ -31,20 +31,32 @@ onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8888/categorys/detail')
     categories.value = response.data.data
-    console.log('Categories loaded:', categories.value)
   } catch (error) {
     console.error('Failed to fetch categories:', error)
   }
 })
 
-watch(() => props.category, (newCategory) => {
-  console.log('Category changed to:', newCategory)
-  console.log('Current categoryId:', categoryId.value)
+// 监听分类变化，重新获取文章列表
+watch(() => props.category, (newCategory, oldCategory) => {
+  if (newCategory !== oldCategory) {
+    // 分类变化时，List组件会通过key的变化重新渲染
+    console.log('Category changed from', oldCategory, 'to', newCategory)
+  }
 })
 </script>
 
 <style scoped>
 .frontend-container {
   width: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

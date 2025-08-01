@@ -1,15 +1,32 @@
 <template>
-    <div>
-        <List :categoryId="data"></List>
-    </div>
-    </template>
-    
-    <script setup lang="js">
-    import List from '@/components/articlelist/index.vue'
-    let data=3;
-    
-    </script>
-    
-    <style scoped>
-    
-    </style>
+  <div class="life-container">
+    <List :category="props.category" :key="props.category"></List>
+  </div>
+</template>
+
+<script setup lang="js">
+import List from '@/components/articlelist/index.vue'
+
+const props = defineProps({
+  category: {
+    type: String,
+    default: '生活'
+  }
+})
+</script>
+
+<style scoped>
+.life-container {
+  width: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+</style>

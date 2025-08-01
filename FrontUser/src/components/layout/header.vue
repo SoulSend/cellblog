@@ -1,29 +1,96 @@
 <template>
   <header class="navbar">
-    <div class="logo-container">
-      <img src="@/assets/image/logo.png" alt="logo" class="logo-image" />
-      <div class="logo">CELL</div>
-    </div>
-    <nav class="nav-links">
-      <ul>
-        <li v-for="link in navLinks" :key="link.text">
-          <RouterLink :to="link.to" class="nav-link">{{ link.text }}</RouterLink>
-        </li>
-      </ul>
-    </nav>
-    
-    <div class="write-article-box">
-      <a href="#" class="btn" @click.prevent="goToWriteArticle">写文章</a>
-    </div>
-    <div class="login-register-box">
-      <button v-if="!isAuthenticated" @click="showLoginModal = true" class="btn">登录/注册</button>
-      <div v-else class="user-profile" @click.stop="toggleDropdown">
-        <img :src="user.avatar" alt="user avatar" class="avatar">
-        <span>{{ user.nickname }}</span>
-        <ul v-show="showDropdown" class="dropdown">
-          <li @click.stop="goToProfile">个人信息</li>
-          <li @click.stop="logout">注销</li>
+    <div class="navbar-container">
+      <!-- Logo区域 -->
+      <div class="logo-section">
+        <div class="logo-wrapper">
+          <img src="@/assets/image/logo.png" alt="CELL" class="logo-image" />
+          <div class="logo-text">
+            <span class="logo-primary">CELL</span>
+            <span class="logo-subtitle">Blog</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 导航链接 -->
+      <nav class="nav-section">
+        <ul class="nav-list">
+          <li v-for="link in navLinks" :key="link.text" class="nav-item">
+            <RouterLink :to="link.to" class="nav-link" :class="{ 'active': isActiveRoute(link.to) }">
+              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path v-if="link.icon === 'home'" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline v-if="link.icon === 'activity'" points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                <circle v-if="link.icon === 'search'" cx="11" cy="11" r="8"></circle>
+                <path v-if="link.icon === 'search'" d="M21 21l-4.35-4.35"></path>
+              </svg>
+              <span class="nav-text">{{ link.text }}</span>
+            </RouterLink>
+          </li>
         </ul>
+      </nav>
+
+      <!-- 右侧操作区 -->
+      <div class="actions-section">
+        <!-- 写文章按钮 -->
+        <button class="write-btn" @click="goToWriteArticle">
+          <svg class="write-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span class="write-text">写文章</span>
+        </button>
+
+        <!-- 用户区域 -->
+        <div v-if="!isAuthenticated" class="auth-section">
+          <button class="login-btn" @click="showLoginModal = true">
+            <svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10,17 15,12 10,7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            <span>登录</span>
+          </button>
+        </div>
+        
+        <div v-else class="user-section" @click.stop="toggleDropdown">
+          <div class="user-avatar">
+            <img :src="user.avatar" alt="用户头像" class="avatar-image" />
+            <div class="avatar-status"></div>
+          </div>
+          <span class="user-name">{{ user.nickname }}</span>
+          <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+          
+          <!-- 用户下拉菜单 -->
+          <div v-show="showDropdown" class="user-dropdown">
+            <div class="dropdown-header">
+              <img :src="user.avatar" alt="用户头像" class="dropdown-avatar" />
+              <div class="dropdown-user-info">
+                <div class="dropdown-name">{{ user.nickname }}</div>
+                <div class="dropdown-email">{{ user.email || '用户' }}</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item" @click.stop="goToProfile">
+                <svg class="dropdown-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>个人信息</span>
+              </li>
+              <li class="dropdown-item" @click.stop="logout">
+                <svg class="dropdown-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16,17 21,12 16,7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>退出登录</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -34,12 +101,21 @@
       @login-success="handleLoginSuccess"
     />
 
-    <!-- 登录提示警告 -->
+    <!-- 登录提示 -->
     <div v-if="showLoginWarning" class="login-warning" @click="hideLoginWarning">
       <div class="warning-content">
-        <div class="warning-icon">⚠️</div>
-        <div class="warning-text">未登录不能写文章哦~~~</div>
-        <button class="warning-close" @click.stop="hideLoginWarning">×</button>
+        <svg class="warning-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div class="warning-text">请先登录后再写文章</div>
+        <button class="warning-close" @click.stop="hideLoginWarning">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -47,12 +123,12 @@
 
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/index";
 import LoginModal from '@/components/login-modal/index.vue';
 
-
 const router = useRouter();
+const route = useRoute();
 const store = useAuthStore();
 const isAuthenticated = computed(() => store.userIsAuthenticated);
 const user = computed(() => store.getUser);
@@ -61,27 +137,31 @@ const showLoginWarning = ref(false);
 const showLoginModal = ref(false);
 
 const navLinks = [
-  { to: "/home/index/前端", text: "首页" },
-  //{ to: "/home/cellai", text: "AI" },
-  { to: "/home/activity", text: "活动" },
-  { to: "/home/search", text: "发现" },
+  { to: "/home/index/前端", text: "首页", icon: "home" },
+  { to: "/home/activity", text: "活动", icon: "activity" },
+  { to: "/home/search", text: "发现", icon: "search" },
 ];
+
+// 检查当前路由是否激活
+const isActiveRoute = (path: string) => {
+  if (path === "/home/index/前端") {
+    return route.path.startsWith('/home/index');
+  }
+  return route.path === path;
+};
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
 const logout = async () => {
-  console.log("触发")
   await store.logout();
-  // 注销后留在当前页面，不跳转到登录页面
   showDropdown.value = false;
 };
 
 const goToWriteArticle = () => {
   if (!isAuthenticated.value) {
     showLoginWarning.value = true;
-    // 3秒后自动隐藏
     setTimeout(() => {
       showLoginWarning.value = false;
     }, 3000);
@@ -96,7 +176,6 @@ const hideLoginWarning = () => {
 
 const handleLoginSuccess = () => {
   showLoginModal.value = false;
-  // 登录成功后可以添加其他逻辑
 };
 
 const goToProfile = () => {
@@ -111,11 +190,10 @@ const handleClickOutside = (event: any) => {
     return;
   }
   
-  const dropdownElement = event.target.closest('.dropdown');
-  const userElement = event.target.closest('.user-profile');
+  const dropdownElement = event.target.closest('.user-dropdown');
+  const userElement = event.target.closest('.user-section');
 
   if (userElement && showDropdown.value) {
-    // 如果点击的是头像，且下拉框已显示，则不关闭下拉框
     return;
   }
 
@@ -137,143 +215,362 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .navbar {
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  font-family: 'Arial', sans-serif; /* 统一字体 */
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
 }
 
-.logo-container {
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+/* Logo区域 */
+.logo-section {
+  flex-shrink: 0;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.logo-wrapper:hover {
+  transform: scale(1.05);
 }
 
 .logo-image {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+  border-radius: var(--radius-md);
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #24292e;
-}
-
-.nav-links ul {
-  list-style: none;
+.logo-text {
   display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-primary {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.5px;
+}
+
+.logo-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 导航区域 */
+.nav-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
   margin: 0;
   padding: 0;
+  gap: var(--space-2);
 }
 
-.nav-links ul li {
-  margin-right: 20px;
+.nav-item {
+  position: relative;
 }
 
 .nav-link {
-  color: black;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary-light);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  border-radius: var(--radius-lg);
+}
+
+.nav-link:hover::before {
+  opacity: 1;
 }
 
 .nav-link:hover {
-  color: rgb(7, 187, 203);
+  color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
-.nav-link:active {
-  color: #005a71;
-}
-
-.write-article-box,
-.login-register-box {
-  display: flex;
-  align-items: center;
-  margin-left: 20px; /* 添加盒子间的间距 */
-}
-
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  text-decoration: none;
-  color: #fff;
-  background-color: #06bac7;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn:hover {
-  background-color: #008db2;
-  transform: translateY(-2px); /* 添加hover效果 */
-}
-
-.btn:active {
-  background-color: #005a71;
-  transform: translateY(2px); /* 添加active效果 */
-}
-
-.user-profile {
+.nav-link.active {
+  color: var(--primary-color) !important;
+  background: var(--primary-light);
+  font-weight: 600;
   position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+  z-index: 1;
+  box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-.avatar {
+.nav-link.active::before {
+  opacity: 0;
+}
+
+.nav-link.active .nav-icon {
+  color: var(--primary-color) !important;
+}
+
+.nav-link.active .nav-text {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+.nav-icon {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-text {
+  font-size: 0.875rem;
+}
+
+/* 操作区域 */
+.actions-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* 写文章按钮 */
+.write-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.write-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.write-icon {
+  flex-shrink: 0;
+}
+
+.write-text {
+  font-size: 0.875rem;
+}
+
+/* 登录按钮 */
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.login-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.login-icon {
+  flex-shrink: 0;
+}
+
+/* 用户区域 */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.user-section:hover {
+  background: var(--bg-secondary);
+}
+
+.user-avatar {
+  position: relative;
+}
+
+.avatar-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #06bac7;
+  border: 2px solid var(--border-light);
 }
 
-.dropdown {
+.avatar-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--success-color);
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.user-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.dropdown-arrow {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform var(--transition-fast);
+}
+
+.user-section:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* 用户下拉菜单 */
+.user-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 10px 0;
+  margin-top: var(--space-2);
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-light);
+  min-width: 240px;
   z-index: 1000;
-  width: 150px;
+  animation: dropdownSlideIn 0.2s ease-out;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dropdown-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dropdown-user-info {
+  flex: 1;
+}
+
+.dropdown-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.dropdown-email {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin-top: var(--space-1);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--space-2) 0;
+}
+
+.dropdown-menu {
   list-style: none;
   margin: 0;
-  opacity: 1;
-  transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  padding: var(--space-2);
 }
 
-.dropdown li {
-  padding: 10px 20px;
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  font-size: 0.875rem;
 }
 
-.dropdown li:hover {
-  background-color: #e0e0e0;
+.dropdown-item:hover {
+  background: var(--bg-secondary);
+  color: var(--primary-color);
 }
 
-.dropdown li:not(:last-child) {
-  border-bottom: 1px solid #e0e0e0;
+.dropdown-icon {
+  flex-shrink: 0;
 }
 
-/* 当下拉框显示时 */
-.dropdown[v-show="showDropdown"] {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* 登录警告样式 */
+/* 登录警告 */
 .login-warning {
   position: fixed;
   top: 50%;
@@ -284,25 +581,25 @@ onBeforeUnmount(() => {
 }
 
 .warning-content {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  background: var(--warning-color);
   color: white;
-  padding: 20px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
   display: flex;
   align-items: center;
-  gap: 15px;
-  min-width: 300px;
+  gap: var(--space-4);
+  min-width: 320px;
   position: relative;
 }
 
 .warning-icon {
-  font-size: 24px;
+  flex-shrink: 0;
   animation: pulse 2s infinite;
 }
 
 .warning-text {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
   flex-grow: 1;
 }
@@ -311,16 +608,16 @@ onBeforeUnmount(() => {
   background: none;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 1.25rem;
   cursor: pointer;
-  padding: 0;
-  width: 24px;
-  height: 24px;
+  padding: var(--space-1);
+  border-radius: 50%;
+  transition: background-color var(--transition-fast);
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
 }
 
 .warning-close:hover {
@@ -349,14 +646,38 @@ onBeforeUnmount(() => {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .nav-links ul {
-    display: none; /* 隐藏导航链接 */
+  .navbar-container {
+    padding: 0 var(--space-4);
   }
+  
+  .nav-text {
+    display: none;
+  }
+  
+  .write-text {
+    display: none;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .dropdown-arrow {
+    display: none;
+  }
+}
 
-  .write-article-box,
-  .login-register-box {
-    flex-grow: 1;
-    justify-content: space-around;
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 var(--space-3);
+  }
+  
+  .nav-section {
+    display: none;
+  }
+  
+  .logo-subtitle {
+    display: none;
   }
 }
 </style>
