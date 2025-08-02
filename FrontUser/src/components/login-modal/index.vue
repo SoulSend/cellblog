@@ -136,6 +136,7 @@ import axios from "axios";
 import { reactive, ref, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/index";
+import { toast } from '@/utils/toast';
 
 const props = defineProps({
   visible: {
@@ -188,11 +189,11 @@ async function login() {
       emit('login-success');
       closeModal();
     } else {
-      alert("账号或者密码错误");
+      toast.error("账号或者密码错误");
     }
   } catch (error) {
     console.error("Login error:", error);
-    alert("登录失败，请重试");
+    toast.error("登录失败，请重试");
   }
 }
 
@@ -216,11 +217,11 @@ async function register() {
       emit('login-success');
       closeModal();
     } else {
-      alert("注册失败，请重试");
+      toast.error("注册失败，请重试");
     }
   } catch (error) {
     console.error("Registration error:", error);
-    alert("注册失败，请重试");
+    toast.error("注册失败，请重试");
   }
 }
 
@@ -238,7 +239,7 @@ async function fetchUserInfo() {
     if (response.data.code === 200) {
       const userData = response.data.data;
       if (userData.ban) {
-        alert("您的账号已被封禁，请联系管理员邮箱：hrc_2525@qq.com");
+        toast.error("您的账号已被封禁，请联系管理员邮箱：hrc_2525@qq.com");
         store.logout();
       } else {
         store.setUser(userData);
@@ -247,10 +248,10 @@ async function fetchUserInfo() {
   } catch (error: any) {
     console.error("Fetch user info error:", error);
     if (error.response && error.response.status === 401) {
-      alert("Session expired. Please log in again.");
+      toast.warning("Session expired. Please log in again.");
       store.logout();
     } else {
-      alert("获取用户信息失败，请重试");
+      toast.error("获取用户信息失败，请重试");
     }
   }
 }

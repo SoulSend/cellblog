@@ -226,6 +226,7 @@ import { ref, onMounted, reactive } from 'vue';
 import Editor from "@/components/write/index.vue";
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { toast } from '@/utils/toast';
 
 const article = reactive({
   id: null,
@@ -302,13 +303,13 @@ const submitArticle = () => {
 
   axios.post('http://localhost:8888/articles/publish', article, config)
     .then(response => { 
-      alert('文章发布成功'); 
+      toast.success('文章发布成功！'); 
       showModal.value = false; 
       router.push('/home');
     })
     .catch(error => { 
       console.error('文章发布失败', error); 
-      alert('文章发布失败'); 
+      toast.error('文章发布失败，请重试'); 
     });
 };
 

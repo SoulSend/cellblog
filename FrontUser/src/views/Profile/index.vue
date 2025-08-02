@@ -317,6 +317,7 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
+import { toast } from '@/utils/toast';
 
 // 定义文章的数据结构
 interface Article {
@@ -423,15 +424,15 @@ const submitEdit = async () => {
   try {
     const response = await axios.post('/users/changeUserInfo', userData);
     if (response.status === 200) {
-      alert('修改成功');
+      toast.success('个人信息修改成功！');
       await fetchUserInfo();
       showEditForm.value = false;
     } else {
-      alert('修改失败');
+      toast.error('修改失败，请重试');
     }
   } catch (error) {
     console.error('Failed to update user info:', error);
-    alert('修改失败，请重试');
+    toast.error('修改失败，请重试');
   }
 };
 
